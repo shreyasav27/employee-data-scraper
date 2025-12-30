@@ -23,5 +23,5 @@ This project fetches employee data from a public REST API, processes and normali
 ```bash
 pip install requests pandas
 python employee_scrapper.py
-This change is added to enable pull request creation.
+This change is added to enable pull request creation
 

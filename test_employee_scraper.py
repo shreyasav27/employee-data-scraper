@@ -20,7 +20,7 @@ def test_json_extraction():
     assert "email" in data[0]
 
 
-# Test Case 3: Validate File Type and Format
+# Test Case 3 Validate File Type and Format
 def test_file_type_and_format():
     data = fetch_employee_data()
     df = pd.DataFrame(data)

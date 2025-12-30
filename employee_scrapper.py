@@ -65,7 +65,7 @@ def main():
     if "hire_date" in df.columns:
         df["hire_date"] = pd.to_datetime(df["hire_date"]).dt.strftime("%Y-%m-%d")
     else:
-        print("ℹ️ hire_date column not present in API – skipping date formatting")
+        print("ℹ hire_date column not present in API – skipping date formatting")
 
     # Final output columns (only existing ones)
     final_columns = [
