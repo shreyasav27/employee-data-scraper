@@ -60,7 +60,7 @@ def test_handle_missing_or_invalid_data(mock_get):
             "first_name": "John",
             "last_name": "Doe",
             "email": "john@example.com",
-            "phone": "123x456",
+            "phone": "@",
             "gender": "Male",
             "age": "30",
             "job_title": "Engineer",
@@ -75,4 +75,5 @@ def test_handle_missing_or_invalid_data(mock_get):
     data = fetch_employee_data()
     df = pd.DataFrame(data)
 
-    assert df.loc[0, "phone"] == "123x456"
+    assert df.loc[0, "phone"] == "@"
+
