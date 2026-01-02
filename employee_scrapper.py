@@ -90,7 +90,7 @@ def main():
     final_df = df[final_columns]
     final_df.to_csv("clean_employee_data.csv", index=False)
 
-    print(" Scraped successfully!")
+    print(" Scraped successfully!!!")
     print(" Output file: clean_employee_data.csv")
 
 
