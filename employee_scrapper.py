@@ -12,7 +12,18 @@ def fetch_employee_data():
             print(f"API Error: {response.status_code}")
             return None
 
-        return response.json()
+        data = response.json()
+        df = pd.DataFrame(data)
+
+        # Phone validation (FIXED as per requirement)
+        def validate_phone(phone):
+            if isinstance(phone, str) and "@" in phone:
+                return "Invalid Number"
+            return phone
+
+        df["phone"] = df["phone"].apply(validate_phone)
+
+        return df.to_dict(orient="records")
 
     except requests.exceptions.Timeout:
         print("Error: Request timed out")
@@ -30,12 +41,12 @@ def main():
 
     df = pd.DataFrame(data)
 
-    print("📌 Columns from API:", df.columns.tolist())
+    print(" Columns from API:", df.columns.tolist())
 
     # Full Name
     df["full_name"] = df["first_name"] + " " + df["last_name"]
 
-    # Designation
+    # Designation logic
     def get_designation(exp):
         if exp < 3:
             return "System Engineer"
@@ -48,26 +59,18 @@ def main():
 
     df["designation"] = df["years_of_experience"].apply(get_designation)
 
-    # Phone validation
-    def validate_phone(phone):
-        if isinstance(phone, str) and "x" in phone.lower():
-            return "Invalid Number"
-        return phone
-
-    df["phone"] = df["phone"].apply(validate_phone)
-
     # Data type conversions
     df["age"] = df["age"].astype(int)
     df["years_of_experience"] = df["years_of_experience"].astype(int)
     df["salary"] = df["salary"].astype(int)
 
-    # Handle hire_date ONLY if present
+    # Handle hire_date only if present
     if "hire_date" in df.columns:
         df["hire_date"] = pd.to_datetime(df["hire_date"]).dt.strftime("%Y-%m-%d")
     else:
-        print("ℹ hire_date column not present in API – skipping date formatting")
+        print("ℹ hire_date column not present – skipping")
 
-    # Final output columns (only existing ones)
+    # Final columns
     final_columns = [
         "full_name",
         "email",
@@ -85,11 +88,10 @@ def main():
         final_columns.append("hire_date")
 
     final_df = df[final_columns]
-
     final_df.to_csv("clean_employee_data.csv", index=False)
 
-    print("✅ Scrapped successfully!")
-    print("📄 Output file: clean_employee_data.csv")
+    print(" Scraped successfully!")
+    print(" Output file: clean_employee_data.csv")
 
 
 if __name__ == "__main__":
