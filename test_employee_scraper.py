@@ -120,3 +120,5 @@ def test_multiple_invalid_phone_numbers(mock_get):
     df = pd.DataFrame(data)
 
     assert all(df["phone"] == "Invalid Number")
+
+
