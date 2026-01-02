@@ -1,5 +1,4 @@
 import pandas as pd
-import requests
 from unittest.mock import patch, Mock
 
 from employee_scrapper import fetch_employee_data
@@ -20,7 +19,7 @@ def test_json_extraction():
     assert "email" in data[0]
 
 
-# Test Case 3 Validate File Type and Format
+# Test Case 3: Validate File Type and Format
 def test_file_type_and_format():
     data = fetch_employee_data()
     df = pd.DataFrame(data)
@@ -75,5 +74,8 @@ def test_handle_missing_or_invalid_data(mock_get):
     data = fetch_employee_data()
     df = pd.DataFrame(data)
 
-    assert df.loc[0, "phone"] == "@"
+    assert df.loc[0, "phone"] == "Invalid Number"
+
+
+
 
