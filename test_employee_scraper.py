@@ -1,5 +1,4 @@
 import pandas as pd
-import requests
 from unittest.mock import patch, Mock
 
 from employee_scrapper import fetch_employee_data
@@ -75,5 +74,51 @@ def test_handle_missing_or_invalid_data(mock_get):
     data = fetch_employee_data()
     df = pd.DataFrame(data)
 
-    assert df.loc[0, "phone"] == "@"
+    assert df.loc[0, "phone"] == "Invalid Number"
+
+# Test Case 6: Phone number without "@"
+@patch("requests.get")
+def test_valid_phone_number(mock_get):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = [
+        {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+            "phone": "9876543210",
+            "gender": "Female",
+            "age": "28",
+            "job_title": "Developer",
+            "years_of_experience": "4",
+            "salary": "60000",
+            "department": "IT"
+        }
+    ]
+
+    mock_get.return_value = mock_response
+
+    data = fetch_employee_data()
+    df = pd.DataFrame(data)
+
+    assert df.loc[0, "phone"] == "9876543210"
+
+# Test Case 7: Multiple invalid phone numbers
+@patch("requests.get")
+def test_multiple_invalid_phone_numbers(mock_get):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = [
+        {"phone": "@"},
+        {"phone": "test@"},
+        {"phone": "123@456"}
+    ]
+
+    mock_get.return_value = mock_response
+
+    data = fetch_employee_data()
+    df = pd.DataFrame(data)
+
+    assert all(df["phone"] == "Invalid Number")
+
 
