@@ -15,11 +15,13 @@ def fetch_employee_data():
         data = response.json()
         df = pd.DataFrame(data)
 
-        # Phone validation (FIXED as per requirement)
+        # Phone validation
         def validate_phone(phone):
-            if isinstance(phone, str) and "@" in phone:
+            if isinstance(phone, str):
                 return "Invalid Number"
-            return phone
+            if "@" in phone:
+                return "Invalid Number"
+            return phone.strip()
 
         df["phone"] = df["phone"].apply(validate_phone)
 
